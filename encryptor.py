@@ -14,7 +14,6 @@ class RSAEncryptor:
 		password=my_password,
 		backend=default_backend()
 		)
-		print "key" + str(private_key)
 		return private_key
 		
 	#generates a private key given an exponenet and key size
