@@ -3,15 +3,18 @@ import sys
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Table, MetaData
+
+conn_string ='mysql+mysqldb://root:test123@localhost:3306/rsa_unified_db'
+engine = create_engine(conn_string, pool_recycle=3600)
+
+Base = declarative_base()
+metadata = MetaData(engine)
 
 class SQL_Engine:
-    conn_string =''
-    engine = None
 
     def connect(self, connection_string):
         self.conn_string = connection_string
-        self.engine = create_engine(self.conn_string, pool_recycle=3600)
     
     def initialize(self):
 
@@ -44,8 +47,6 @@ class SQL_Engine:
                 friend_code = Column(String(250))
                 message = Column(String(250))
 
-            Base.metadata.create_all(self.engine)
-
             class Sender(Base):
                 __tablename__ = 'sender'
 
@@ -53,21 +54,65 @@ class SQL_Engine:
                 sender_code = Column(String(250))
                 name = Column(String(250))
 
+            Base.metadata.create_all(engine)
+
             print "Database initialized" 
         else:
-            print "Database already populated"      
+            print "Database already populated"     
+
+        self.create_tables()
 
     def check_for_tables(self, table_list):
         for table in table_list:
-            if not self.engine.dialect.has_table(self.engine, table):
+            if not engine.dialect.has_table(engine, table):
                 return False
         return True
 
-    #Updates Api_Identifier and Key_Pairing tables.
-    def crate_new_identity(self, secret_key, friend_code, sender_code, public_key, private_key):
-        #Create random sender_code and random friend_code . Return these + secret_key
-        return '1'
+    def create_tables(self):
+        self.api_identifier = Table('api_identifier', metadata,    
+            Column('id', Integer, primary_key=True),
+            Column('secret_key', String(250)),
+            Column('friend_code', String(250)),
+            Column('sender_code', String(250)),
+            Column('name', String(250)), 
+            extend_existing=True)
 
+        self.key_pairing = Table('key_pairing', metadata,    
+            Column('id', Integer, primary_key=True),
+            Column('public_key', String(250)),
+            Column('private_key', String(250)),
+            Column('secret_key', String(250)),
+            Column('friend_code', String(250)), 
+            extend_existing=True)   
+
+        self.message = Table('message', metadata,    
+            Column('id', Integer, primary_key=True),
+            Column('sender_code', String(250)),
+            Column('friend_code', String(250)),
+            Column('message', String(250)), 
+            extend_existing=True)
+
+        self.sender = Table('sender', metadata,    
+            Column('id', Integer, primary_key=True),
+            Column('sender_code', String(250)),
+            Column('name', String(250)),
+            Column('message', String(250)), 
+            extend_existing=True)
+
+    #Updates Api_Identifier and Key_Pairing tables.
+    def crate_new_identity(self, a_secret_key, a_public_key, a_private_key):
+        #Create random sender_code and random friend_code . Return these + secret_key
+
+        ins = self.api_identifier.insert().values(
+            id = 3,
+            secret_key = a_secret_key ,
+            
+            friend_code = '2',
+            sender_code = '3',
+            name = '4'
+        )
+        conn = engine.connect()
+        conn.execute(ins)
     #Add a message
     def create_message(self, sender_code, friend_code, encrypted_message):
         return '2'
@@ -86,7 +131,7 @@ class SQL_Engine:
         return '1'
 
     #Get name given sneder_id
-    def get_name(sender_code):
+    def get_name(self, sender_code):
         return '1'
 
     #With known friend code, get all encryted messages.
@@ -102,3 +147,5 @@ if __name__ == '__main__':
     eng = SQL_Engine()
     eng.connect('mysql+mysqldb://root:test123@localhost:3306/rsa_unified_db')
     eng.initialize()
+
+    eng.crate_new_identity('1', '2', '3')
