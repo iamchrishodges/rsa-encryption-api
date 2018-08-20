@@ -3,6 +3,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa #private key creation
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization 
+from cryptography.hazmat.primitives.serialization import load_pem_public_key
 
 class RSAEncryptor:
 
@@ -27,21 +28,33 @@ class RSAEncryptor:
 		return private_key
 	
 	#Serializes private key for storage. Provides encryption
-	def serialize_private_key(self, private_key):	
+	def serialize_private_key(self, private_key, password):	
 		#Key serializaiton	
 		pem = private_key.private_bytes(
 			encoding=serialization.Encoding.PEM,
 			format=serialization.PrivateFormat.PKCS8,
-			encryption_algorithm=serialization.BestAvailableEncryption(b'mypassword')
+			encryption_algorithm=serialization.BestAvailableEncryption(password)
 			)	
 		
 		return pem
+
+	def deserialize_private_key(self, s_privatve_key, password):
+		private_key = serialization.load_pem_private_key(
+			s_privatve_key,
+			password=password,
+			backend=default_backend()
+		)
+		return private_key
 
 	def serialize_public_key(self, public_key):	
 		pem = public_key.public_bytes(
 		encoding=serialization.Encoding.PEM,
 		format=serialization.PublicFormat.SubjectPublicKeyInfo
 		)
+		return pem
+
+	def deserialize_public_key(self, s_public_key):
+		pem = load_pem_public_key(s_public_key, backend=default_backend())
 		return pem
 
 	#public key creation	
@@ -79,9 +92,13 @@ if __name__ == '__main__':
 		private = encryptor.load_private_key("rsa_private.pem", None) 
 		public = encryptor.generate_public_key(private)
 		
-		cipher_text = encryptor.encrypt(public, b"This is a test of the encryption and decryption.")
-		print "cipher text :"  + cipher_text
+		e_private = encryptor.serialize_private_key(private, b'mypassword')
+		r_private = encryptor.deserialize_private_key(e_private, b'mypassword')
+
+
+		#cipher_text = encryptor.encrypt(public, b"This is a test of the encryption and decryption.")
+		#print "cipher text :"  + cipher_text
 		
-		plaintext = encryptor.decrypt(private, cipher_text)
+		#plaintext = encryptor.decrypt(private, cipher_text)
 		
-		print "plaintext : " + plaintext
+		#print "plaintext : " + plaintext
