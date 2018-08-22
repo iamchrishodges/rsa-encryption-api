@@ -4,6 +4,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization 
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
+import base64
 
 class RSAEncryptor:
 
@@ -86,7 +87,11 @@ class RSAEncryptor:
 			)
 		)
 		return plaintext	
-	
+
+	def decrypt_list(self, private_key, cipher_dict):
+		for entry in cipher_dict:
+			entry['message'] = self.decrypt(private_key,  base64.b64decode(str(entry['message'])))
+		return cipher_dict
 if __name__ == '__main__':
 		encryptor = RSAEncryptor()
 		private = encryptor.load_private_key("rsa_private.pem", None) 
