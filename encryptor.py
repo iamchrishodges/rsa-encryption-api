@@ -6,6 +6,8 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
 import base64
 
+my_password = b'mypassword'
+
 class RSAEncryptor:
 
 	#loads a private key in pem format from a file
@@ -64,8 +66,10 @@ class RSAEncryptor:
 		return public_key
 	
 	#message encryption		
-	def encrypt(self, public_key, my_message):	
+	def encrypt(self, public_key_string, my_message):
+		public_key = self.deserialize_public_key(public_key_string)
 		message = my_message #b"encrypted data"
+		print message	
 		ciphertext = public_key.encrypt(
 			message,
 			padding.OAEP(
@@ -77,7 +81,8 @@ class RSAEncryptor:
 		return ciphertext
 	
 	#message decryption
-	def decrypt(self, private_key, ciphertext):	
+	def decrypt(self, private_key_string, ciphertext):
+		private_key = self.deserialize_private_key(private_key_string, my_password)
 		plaintext = private_key.decrypt(
 			ciphertext,
 			padding.OAEP(
