@@ -10,7 +10,7 @@ class Key_Pairing(Base):
     private_key = Column(String(2048))
     secret_key = Column(String(2048))
     friend_code = Column(String(2048))
-    
+
     def __init__(self, public_key, private_key, secret_key, friend_code):
 
         self.public_key = public_key

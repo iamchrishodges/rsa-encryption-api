@@ -21,7 +21,6 @@ while not app.config.from_pyfile('config.cfg', silent=True):
         print('could not write config file to system.')
         sys.exit()
     
-    #Need to create an RSA public Key, RSA private Key, a
     
     #create_new_identity(self, a_secret_key, a_public_key, a_private_key, a_friend_code, a_name)
     private_key = my_encryptor.load_private_key("rsa_private.pem", None)
@@ -37,6 +36,7 @@ while not app.config.from_pyfile('config.cfg', silent=True):
     f.close()
     attempts =+ 1
 
+secret_key = '222222'
 private_key = my_encryptor.deserialize_private_key(sql_engine.get_private_key('222222'), b'mypassword')
 public_key = my_encryptor.deserialize_public_key(sql_engine.get_public_key('bba'))
 
