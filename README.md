@@ -25,7 +25,7 @@ When the API is initialized, it is provided a public key, a private key, a secre
 
 * **Private Key** : The private key is the part of the RSA Key Pair that provides the ability to safely decrypt messages. Since the encryption algorithm is asymmetric, this key can "unlock" a message but cannot "lock" a message. In the database, this value is serialized in pem format with a password and Base64 encoded. The password will be stored in the config.cfg file upon API initialization.
 
-* **Secret Key** : The secret key is the ticket to everything in this project. This is a value that will allow you to retrieve friend codes and corresponding public keys so that you may successfully send and read messages. Secret keys are registered to each API and stored in the config.cfg file. End users interacting with the API do not need to be aware of the value but, without its existence, they would not ber able to read messages.
+* **Secret Key** : The secret key is the ticket to everything in this project. This is a value that will allow you to retrieve friend codes and corresponding public keys so that you may successfully send and read messages. Secret keys are registered to each API and stored in the config.cfg file. End users interacting with the API do not need to be aware of the value but, without its existence, they would not be able to read messages.
 
 
 # Project Structure Summary of Files
@@ -49,7 +49,7 @@ SQL-Alchemy Components
 
 Cryptography Components
 ------------------------
-* **encryptor.py** : An inerface that allows messages to be encrypted and decrypted easily through RSA encryption. This was built in such as way that other algorithms could be written in a similar fashion and could be swapped out with minimal rewrite required in other modules.
+* **encryptor.py** : An interface that allows messages to be encrypted and decrypted easily through RSA encryption. This was built in such as way that other algorithms could be written in a similar fashion and could be swapped out with minimal rewrite required in other modules.
 
 # Discussion
 
@@ -67,4 +67,4 @@ RSA Encryption is a solid choice that can almost guarantee security but the algo
 
 In this project, APIs create new key sets upon initialization whenever a config.cfg file does not exist. Since the encrypted messages persist, the keys for these APIs must stay the same if older messages are to be archived or a mechanism must be created for a key history.
 
-Additionally, this project assumes that two applications have access to a unified database that would provide them with the public and private keys of similar applications. Private keys are password-protected and never stored in a unified location but, with the current implementation, there's no way to update this password for padded security. As an extension to this project, the paradigm could be resculpted where Users within a single applicaiton have access to this singular database and the users can utilize RSA to send messages to each other instead of entire applications.
+Additionally, this project assumes that two applications have access to a unified database that would provide them with the public and private keys of similar applications. Private keys are password-protected and never stored in a unified location but, with the current implementation, there's no way to update this password for padded security. As an extension to this project, the paradigm could be re-sculpted where Users within a single application have access to this singular database and the users can utilize RSA to send messages to each other instead of entire applications.
