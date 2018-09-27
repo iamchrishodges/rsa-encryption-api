@@ -8,7 +8,7 @@ python flask_app.py
 # Overview
 The RSA Encryption API demonstrates the application of RSA Encryption and how it can be used to encrypt messages stored in a database. This project allows for multiple instances of the API to be stood up and commit encrypted messages to a centralized database that can be read by a designated "friend" API.
 
-This applicaiton features a flask-based back-end utlizing SQL Alchemy for database interactions and pyca-cryptography for RSA Encryption. A simple front end exists to demostrate the use of each API endpoint and is written in Vue.js and Bootstrap. This UI can be accessed through the /UI/ route once the application is initialized.
+This application features a flask-based back-end utilizing SQL Alchemy for database interactions and pyca-cryptography for RSA Encryption. A simple front end exists to demonstrate the use of each API endpoint and is written in Vue.js and Bootstrap. This UI can be accessed through the /UI/ route once the application is initialized.
 
 Description of Identifiers
 ---------------------------
