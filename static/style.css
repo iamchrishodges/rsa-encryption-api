@@ -1,0 +1,14 @@
+body {
+    padding-top: 5rem;
+    text-align: left;
+}
+
+.lBoard {
+    padding: 3rem 1.5rem;
+    text-align: center;
+}
+
+td {
+    word-wrap:break-word;
+    word-break:break-word;
+}    
